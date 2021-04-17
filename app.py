@@ -33,7 +33,7 @@ class Predict(Resource):
         nltk_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
         import pickle
-        with open('tokenizer.pickle', 'rb') as handle:
+        with open('tokenizer2.pickle', 'rb') as handle:
             tokenizer = pickle.load(handle)
     
         data = request.get_json()
@@ -42,7 +42,7 @@ class Predict(Resource):
         sentences = nltk_tokenizer.tokenize(emotion_data)
         print(sentences)
         
-        m = tf.keras.models.load_model('modligani4.hdf5')
+        m = tf.keras.models.load_model('modligani5.hdf5')
     
     
         class_names = ['joy', 'fear', 'anger', 'sadness', 'neutral']

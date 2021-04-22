@@ -24,7 +24,7 @@ import nltk.data
 
 @app.route('/', methods=['GET'])
 def home():
-   return "<h1>An API created for the Moodnitor project.</h1>"
+   return "<h2>API created for the Moodnitor project.</h2>"
 
 class Predict(Resource):
     @staticmethod
@@ -32,24 +32,24 @@ class Predict(Resource):
         
         nltk_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
+        # loading tokenizer
         import pickle
-        with open('tokenizer2.pickle', 'rb') as handle:
+        with open('tokenizer.pickle', 'rb') as handle:
             tokenizer = pickle.load(handle)
     
         data = request.get_json()
         emotion_data = data['emotion']
         
         sentences = nltk_tokenizer.tokenize(emotion_data)
-        print(sentences)
         
-        m = tf.keras.models.load_model('modligani5.hdf5')
-    
+        # loading pre-trained model
+        m = tf.keras.models.load_model('emotionmodel.hdf5')
     
         class_names = ['joy', 'fear', 'anger', 'sadness', 'neutral']
-        #em = ['anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise','neutral']
         
         predictions = []
         
+        # Splitting entry into sentences
         for emotion in sentences:        
             
             text_txt_tokenized = tokenizer.texts_to_sequences([emotion])
@@ -69,6 +69,7 @@ class Predict(Resource):
             
             pred_class_value = max(prediction[0])
             
+            # object to be returned in the reponse
             obj = {
                 "sentence": emotion,
                 "prediction": prediction.tolist(),
@@ -78,7 +79,7 @@ class Predict(Resource):
             
             predictions.append(obj)   
             
-        
+        # jsonify method user to return response
         return jsonify(
             predictions = predictions
         )
